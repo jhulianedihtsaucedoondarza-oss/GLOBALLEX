@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlobalLex | Despacho de Abogados Virtual</title>
+  <meta name="description" content="GlobalLex — Firma de abogados virtual en Bolivia. Consultas jurídicas en línea, todas las ramas del Derecho, equipo experto y recursos formativos." />
+  <style>
+    :root {
+      --bg: #0b2038;          /* azul profundo (confianza) */
+      --bg-2: #0e2a4d;        /* azul marino */
+      --accent: #cfae61;      /* dorado (elegancia) */
+      --muted: #e9eef5;       /* gris azulado claro */
+      --text: #0f172a;        /* gris casi negro para textos claros */
+      --text-on-dark: #f8fafc;/* texto sobre fondo oscuro */
+      --card: #ffffff;        /* tarjetas */
+      --ok: #1f9d55;          /* verde para estados */
+      --danger: #d64545;      /* rojo para alertas */
+      --link: #184e98;        /* enlaces */
+      --shadow: 0 10px 25px rgba(13, 28, 54, .18);
+      --radius: 18px;
+    }
+
+    /* Tipografía global solicitada */
+    html, body, button, input, select, textarea {
+      font-family: "Arial Narrow", Arial, sans-serif;
+      letter-spacing: .2px;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f7fb; color: var(--text); }
+
+    /* Encabezado hero */
+    header.hero {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 100%);
+      color: var(--text-on-dark);
+      padding: 28px 18px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: -40% -10% auto auto;
+      width: 580px; height: 580px;
+      background: radial-gradient(closest-side, rgba(207,174,97,.25), transparent 65%);
+      transform: rotate(12deg);
+      pointer-events: none;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap: 12px; }
+    .brand { display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; }
+    .brand .logo {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #f5dca3);
+      display:grid; place-items:center; color:#1c2431; font-weight:900; box-shadow: var(--shadow);
+    }
+    .brand .name { font-size: 28px; font-weight: 800; letter-spacing: .6px; }
+    .brand .tag { font-size: 12px; opacity:.9; }
+
+    nav.nav { display:flex; gap: 10px; flex-wrap: wrap; }
+    nav.nav a {
+      color: var(--text-on-dark); text-decoration: none; font-weight: 700; font-size: 14px;
+      padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18);
+    }
+    nav.nav a:hover { background: rgba(255,255,255,.1); }
+
+    .hero-main { margin-top: 28px; display:grid; grid-template-columns: 1.1fr .9fr; gap: 22px; }
+    @media (max-width: 880px) { .hero-main { grid-template-columns: 1fr; } }
+
+    .hero h1 { font-size: 44px; line-height: 1.1; margin: 0 0 12px; }
+    .hero p.lead { font-size: 18px; opacity:.95; margin: 0 0 18px; }
+
+    .cta-row { display:flex; gap:12px; flex-wrap: wrap; margin-top: 6px; }
+    .btn {
+      appearance: none; border: none; cursor: pointer; text-decoration:none; display:inline-flex; align-items:center; gap:10px;
+      padding: 12px 16px; border-radius: 12px; font-weight: 800; font-size: 14px; box-shadow: var(--shadow);
+    }
+    .btn-primary { background: var(--accent); color: #1a1f2b; }
+    .btn-ghost { background: transparent; color: var(--text-on-dark); border: 1px solid rgba(255,255,255,.25); }
+
+    .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+
+    /* Ventanas/Secciones desplegables */
+    .accordion { display:grid; gap: 14px; margin: -48px 0 36px; position: relative; z-index: 2; }
+    .acc-item { border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: var(--shadow); }
+    .acc-head { width: 100%; display:flex; align-items:center; justify-content:space-between; padding: 18px 18px; cursor:pointer; background: #ffffff; border: none; }
+    .acc-head h3 { margin:0; font-size: 20px; }
+    .acc-head span { opacity:.7; font-size: 13px; }
+    .acc-content { display: none; padding: 0 18px 18px; background: #ffffff; }
+    .acc-item.open .acc-content { display:block; }
+
+    /* Firma (pestañas internas) */
+    .tabs { display:flex; gap:8px; flex-wrap: wrap; margin: 12px 0 16px; }
+    .tab { padding:8px 12px; border-radius: 999px; border:1px solid #e5e8ef; background:#f7f9fc; cursor:pointer; font-weight:700; font-size:13px; }
+    .tab.active { background: var(--accent); border-color: var(--accent); color:#1a1f2b; }
+
+    /* Servicios */
+    .grid { display:grid; gap: 14px; }
+    .grid.services { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 980px) { .grid.services { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid.services { grid-template-columns: 1fr; } }
+    .service { padding: 14px; border:1px solid #e7ebf3; border-radius: 14px; background:#fff; transition: transform .15s ease; cursor: pointer; }
+    .service:hover { transform: translateY(-2px); }
+    .service h4 { margin: 6px 0 6px; font-size: 16px; }
+    .service p { margin: 0; font-size: 13px; opacity:.85; }
+
+    /* Modal genérico */
+    .modal-backdrop { position: fixed; inset:0; background: rgba(8,14,24,.5); display:none; align-items:center; justify-content:center; padding: 18px; z-index: 60; }
+    .modal { width:min(720px, 100%); background:#fff; border-radius: 16px; box-shadow: var(--shadow); overflow:hidden; }
+    .modal header { display:flex; align-items:center; justify-content:space-between; padding: 14px 16px; border-bottom:1px solid #eef2f8; }
+    .modal header h4 { margin:0; font-size:18px; }
+    .modal .body { padding: 16px; }
+    .modal .actions { display:flex; gap: 10px; padding: 12px 16px 20px; }
+
+    /* Blog tabs */
+    .subtabs { display:flex; gap:8px; margin-bottom: 12px; flex-wrap:wrap; }
+    .subtab { padding:6px 10px; border-radius:10px; border:1px solid #e6e9f1; background:#f8fafc; font-weight:700; cursor:pointer; }
+    .subtab.active { background: #fff3d6; border-color: #ffe3a1; }
+
+    /* Equipo */
+    .grid.team { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 980px) { .grid.team { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid.team { grid-template-columns: 1fr; } }
+    .member { border:1px solid #e7ebf3; border-radius: 14px; padding: 14px; background: #fff; }
+    .member h4 { margin: 6px 0; font-size: 17px; }
+    .badge { display:inline-block; padding: 2px 8px; font-size: 11px; border-radius: 999px; background: #eef3fb; border:1px solid #e1e7f6; }
+
+    /* Contacto */
+    section#contacto { margin: 28px 0 40px; }
+    form.contact { display:grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    form.contact input, form.contact textarea { padding: 12px; border-radius: 10px; border:1px solid #dfe5f0; font-size:14px; }
+    form.contact textarea { grid-column: 1/-1; min-height: 120px; }
+
+    /* Footer con redes */
+    footer { background: #09172a; color: var(--text-on-dark); padding: 22px 16px; border-top: 3px solid var(--accent); }
+    .footer-grid { display:grid; gap: 14px; grid-template-columns: 1.2fr 1fr 1fr; }
+    @media (max-width: 880px) { .footer-grid { grid-template-columns: 1fr; } }
+    .socials { display:flex; gap: 12px; align-items:center; flex-wrap:wrap; }
+    .socials a { display:inline-flex; align-items:center; gap:8px; color: var(--text-on-dark); text-decoration:none; padding: 8px 10px; border-radius: 999px; border:1px solid rgba(255,255,255,.15); }
+    .small { font-size: 13px; opacity:.9; }
+
+    /* Utilidades */
+    .muted { color:#5b6b82; }
+    .headline { font-size: 26px; margin: 8px 0 14px; }
+    .section-title { font-size: 22px; margin: 10px 0 14px; border-left: 6px solid var(--accent); padding-left: 10px; }
+    .divider { height: 1px; background: #e7ebf3; margin: 12px 0; }
+    .address { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <!-- ENCABEZADO -->
+  <header class="hero">
+    <div class="container">
+      <div class="topbar">
+        <a class="brand" href="#top" aria-label="GlobalLex - Inicio">
+          <div class="logo" aria-hidden="true">G</div>
+          <div>
+            <div class="name">GlobalLex</div>
+            <div class="tag">Despacho de Abogados Virtual • Bolivia</div>
+          </div>
+        </a>
+        <nav class="nav" aria-label="Navegación principal">
+          <a href="#firma">La Firma</a>
+          <a href="#servicios">Servicios</a>
+          <a href="#blog">Blog</a>
+          <a href="#equipo">Nuestro equipo</a>
+          <a href="#contacto" class="btn btn-primary" style="padding:8px 14px;">Contacto</a>
+        </nav>
+      </div>
+
+      <div class="hero-main">
+        <div>
+          <h1>Consulta Jurídica Virtual con <span style="color: var(--accent);">GlobalLex</span></h1>
+          <p class="lead">Atención ágil, segura y confidencial en todas las áreas del Derecho boliviano. Agenda una videollamada o envíanos tu caso por WhatsApp y un abogado especialista te orientará.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#contacto">Agendar consulta</a>
+            <a class="btn btn-ghost" href="#servicios">Ver áreas de práctica</a>
+          </div>
+          <p class="small" style="margin-top:10px;">Dirección de referencia: Av. Ejemplo 123, Piso 4, Torre Legal, La Paz, Bolivia.</p>
+        </div>
+        <div class="card">
+          <div class="headline">Atención inmediata</div>
+          <ul style="margin:0; padding-left: 18px; line-height:1.7;">
+            <li>Consultas por videollamada, teléfono y mensajería.</li>
+            <li>Documentos y contratos en 24–72 h según complejidad.</li>
+            <li>Seguimiento en tiempo real y portal del cliente.</li>
+          </ul>
+          <div class="divider"></div>
+          <div class="small muted">Horario: Lun–Vie 08:30–18:30 • Sáb 09:00–13:00 (GMT-4)</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- VENTANAS DESPLEGABLES -->
+    <section class="accordion" aria-label="Secciones principales">
+
+      <!-- LA FIRMA -->
+      <article id="firma" class="acc-item open">
+        <button class="acc-head" aria-expanded="true" aria-controls="firma-content">
+          <h3>La Firma</h3>
+          <span>Filosofía • Misión • Visión • Historia</span>
+        </button>
+        <div id="firma-content" class="acc-content">
+          <div class="tabs" role="tablist" aria-label="Secciones de la firma">
+            <button class="tab active" data-tab="filosofia">Filosofía</button>
+            <button class="tab" data-tab="mision">Misión</button>
+            <button class="tab" data-tab="vision">Visión</button>
+            <button class="tab" data-tab="historia">Historia</button>
+          </div>
+          <div id="tab-filosofia" class="tab-panel">
+            <p>En GlobalLex creemos en la <strong>abogacía preventiva</strong>, la <strong>claridad</strong> y la <strong>ética</strong> como pilares. Traducimos lo jurídico a un lenguaje claro y accionable, combinando tecnología con trato humano.</p>
+          </div>
+          <div id="tab-mision" class="tab-panel" hidden>
+            <p>Nuestra misión es <strong>proteger los intereses</strong> de personas y empresas en Bolivia con asesoría especializada, oportuna y accesible desde cualquier lugar.</p>
+          </div>
+          <div id="tab-vision" class="tab-panel" hidden>
+            <p>Aspiramos a ser la <strong>firma digital de referencia</strong> en el país, reconocida por su excelencia técnica, transparencia y experiencia centrada en el cliente.</p>
+          </div>
+          <div id="tab-historia" class="tab-panel" hidden>
+            <p>GlobalLex surge en 2025 como un despacho virtual que integra abogados senior con jóvenes talentos, unificando <em>know-how</em> sectorial y herramientas digitales para brindar soluciones ágiles.</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- SERVICIOS -->
+      <article id="servicios" class="acc-item">
+        <button class="acc-head" aria-expanded="false" aria-controls="servicios-content">
+          <h3>Servicios</h3>
+          <span>Áreas de práctica en Bolivia</span>
+        </button>
+        <div id="servicios-content" class="acc-content">
+          <p class="small muted">Haz clic en una rama para ver información básica y derivarte a contacto.</p>
+          <div class="grid services" id="services-grid">
+            <!-- Las tarjetas se generan también desde JS para facilitar edición / modal -->
+          </div>
+        </div>
+      </article>
+
+      <!-- BLOG -->
+      <article id="blog" class="acc-item">
+        <button class="acc-head" aria-expanded="false" aria-controls="blog-content">
+          <h3>Blog</h3>
+          <span>Centro de Enseñanzas • Artículos y Publicaciones</span>
+        </button>
+        <div id="blog-content" class="acc-content">
+          <div class="subtabs" role="tablist" aria-label="Subsecciones de Blog">
+            <button class="subtab active" data-subtab="ensenanzas">Centro de Enseñanzas</button>
+            <button class="subtab" data-subtab="articulos">Artículos y Publicaciones</button>
+          </div>
+          <div id="sub-ensenanzas" class="subpanel">
+            <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 14px;">
+              <div class="card">
+                <h4>Guía rápida: ¿Cómo presentar una demanda civil?</h4>
+                <p class="small">Pasos, requisitos y tiempos orientativos en Bolivia.</p>
+                <div class="divider"></div>
+                <a href="#contacto" class="btn btn-primary">Consultar un caso</a>
+              </div>
+              <div class="card">
+                <h4>Taller: Contratación laboral sin riesgos</h4>
+                <p class="small">Claves de cumplimiento y buenas prácticas para pymes.</p>
+                <div class="divider"></div>
+                <a href="#contacto" class="btn btn-primary">Quiero inscribirme</a>
+              </div>
+            </div>
+          </div>
+          <div id="sub-articulos" class="subpanel" hidden>
+            <div class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 14px;">
+              <div class="card">
+                <h4>Arbitraje y conciliación: ventajas para empresas</h4>
+                <p class="small">Cuándo conviene optar por mecanismos alternativos de resolución de conflictos.</p>
+                <div class="divider"></div>
+                <a href="#contacto" class="btn btn-primary">Hablar con un especialista</a>
+              </div>
+              <div class="card">
+                <h4>Protección de datos en Bolivia</h4>
+                <p class="small">Buenas prácticas para el tratamiento responsable de información personal.</p>
+                <div class="divider"></div>
+                <a href="#contacto" class="btn btn-primary">Evaluar cumplimiento</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- EQUIPO -->
+      <article id="equipo" class="acc-item">
+        <button class="acc-head" aria-expanded="false" aria-controls="equipo-content">
+          <h3>Nuestro Equipo</h3>
+          <span>Abogados, perfiles y contacto</span>
+        </button>
+        <div id="equipo-content" class="acc-content">
+          <div class="grid team">
+            <div class="member">
+              <div class="badge">Socio Director</div>
+              <h4>Dr. Ignacio Valdés</h4>
+              <p class="small">Procesal civil y comercial, arbitraje. 15+ años de experiencia.</p>
+              <p class="small"><strong>Email:</strong> ignacio.valdes@globallex.bo<br><strong>Tel:</strong> +591 2 555 1234</p>
+            </div>
+            <div class="member">
+              <div class="badge">Socia</div>
+              <h4>Dra. Marcela Quiroga</h4>
+              <p class="small">Laboral y seguridad social. Auditorías de cumplimiento.</p>
+              <p class="small"><strong>Email:</strong> marcela.quiroga@globallex.bo<br><strong>Tel:</strong> +591 2 555 5678</p>
+            </div>
+            <div class="member">
+              <div class="badge">Senior</div>
+              <h4>Dr. Álvaro Ríos</h4>
+              <p class="small">Penal económico y compliance. Litigios complejos.</p>
+              <p class="small"><strong>Email:</strong> alvaro.rios@globallex.bo<br><strong>Tel:</strong> +591 2 555 9012</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- CONTACTO GENERAL -->
+    <section id="contacto" class="card">
+      <h3 class="section-title">Contacto</h3>
+      <p class="address"><strong>GlobalLex</strong> — Av. Ejemplo 123, Piso 4, Torre Legal, La Paz, Bolivia.<br>
+        <strong>Teléfonos generales:</strong> Fijo La Paz +591 2 555 0000 • Santa Cruz +591 3 555 0000 • Cochabamba +591 4 555 0000<br>
+        <strong>WhatsApp:</strong> +591 700 00000 • <strong>Email:</strong> contacto@globallex.bo</p>
+      <div class="divider"></div>
+      <form class="contact" onsubmit="event.preventDefault(); window.location.href='mailto:contacto@globallex.bo?subject=Consulta%20Web%20GlobalLex&body=Nombre:%20'+encodeURIComponent(this.nombre.value)+'%0ACorreo:%20'+encodeURIComponent(this.correo.value)+'%0ATeléfono:%20'+encodeURIComponent(this.telefono.value)+'%0AArea:%20'+encodeURIComponent(this.area.value)+'%0ADescripción:%0A'+encodeURIComponent(this.mensaje.value);">
+        <input name="nombre" placeholder="Nombre completo" required />
+        <input name="correo" type="email" placeholder="Correo electrónico" required />
+        <input name="telefono" placeholder="Teléfono / WhatsApp" />
+        <select name="area" required>
+          <option value="">Área de interés</option>
+          <option>Civil</option><option>Penal</option><option>Laboral</option><option>Familia</option>
+          <option>Comercial / Mercantil</option><option>Administrativo</option><option>Constitucional</option>
+          <option>Tributario</option><option>Agrario</option><option>Minero</option><option>Ambiental</option>
+          <option>Propiedad Intelectual</option><option>Arbitraje y Conciliación</option>
+          <option>Hidrocarburos / Energía</option><option>Telecomunicaciones</option>
+          <option>Notarial / Inmobiliario</option><option>Protección de datos</option><option>Consumo</option>
+        </select>
+        <textarea name="mensaje" placeholder="Cuéntanos brevemente tu consulta" required></textarea>
+        <button class="btn btn-primary" type="submit">Enviar consulta</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- PIE: Redes en todas las ventanas -->
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="name" style="font-size:20px; font-weight:900;">GlobalLex</div>
+        <p class="small">Despacho de Abogados Virtual • Bolivia</p>
+        <p class="small">Av. Ejemplo 123, Piso 4, Torre Legal, La Paz</p>
+      </div>
+      <div>
+        <div class="small" style="margin-bottom:8px; opacity:.9;">Síguenos</div>
+        <div class="socials">
+          <a href="#" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2.5V12h2.5V9.7c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.3c-1.3 0-1.7.8-1.7 1.6V12h2.9l-.5 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg>
+            Facebook
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2.2A2.8 2.8 0 1 0 12 16.8 2.8 2.8 0 0 0 12 9.2zm5.5-2a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+            Instagram
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 7.2a3 3 0 0 0-2.1-2.1C19.5 4.5 12 4.5 12 4.5s-7.5 0-9.4.6A3 3 0 0 0 .5 7.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-4.8zM9.8 15.5V8.5l6.2 3.5-6.2 3.5z"/></svg>
+            YouTube
+          </a>
+        </div>
+      </div>
+      <div>
+        <div class="small" style="margin-bottom:8px; opacity:.9;">Contacto</div>
+        <p class="small">Fijos: La Paz +591 2 555 0000 • SCZ +591 3 555 0000 • CBBA +591 4 555 0000</p>
+        <p class="small">WhatsApp: +591 700 00000 • Email: contacto@globallex.bo</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL SERVICIOS -->
+  <div class="modal-backdrop" id="modal-bd" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal" role="document">
+      <header>
+        <h4 id="modal-title">Área de práctica</h4>
+        <button class="tab" onclick="closeModal()" aria-label="Cerrar">Cerrar</button>
+      </header>
+      <div class="body">
+        <p id="modal-desc" class="small"></p>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="#contacto">Contactar un abogado</a>
+        <button class="btn" onclick="closeModal()">Seguir explorando</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Utilidad: alternar acordeones
+    document.querySelectorAll('.acc-head').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.acc-item').forEach(i => i.classList.remove('open'));
+        document.querySelectorAll('.acc-head').forEach(h => h.setAttribute('aria-expanded', 'false'));
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // Tabs de La Firma
+    const tabs = document.querySelectorAll('#firma .tab');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const target = t.dataset.tab;
+      document.querySelectorAll('#firma .tab-panel').forEach(p => p.hidden = true);
+      document.getElementById('tab-' + target).hidden = false;
+    }));
+
+    // Subtabs de Blog
+    const subtabs = document.querySelectorAll('#blog .subtab');
+    subtabs.forEach(s => s.addEventListener('click', () => {
+      subtabs.forEach(x => x.classList.remove('active'));
+      s.classList.add('active');
+      const target = s.dataset.subtab;
+      document.querySelectorAll('#blog .subpanel').forEach(p => p.hidden = true);
+      document.getElementById('sub-' + target).hidden = false;
+    }));
+
+    // Servicios: catálogo con descripciones básicas
+    const AREAS = [
+      { n: 'Civil', d: 'Resolución de conflictos civiles, cumplimiento de contratos, daños y perjuicios, cobros y ejecuciones.' },
+      { n: 'Penal', d: 'Defensa y asesoría en delitos comunes y económicos, medidas cautelares, recursos y juicios orales.' },
+      { n: 'Laboral', d: 'Contratos, derechos laborales, desvinculaciones, procesos ante el Ministerio de Trabajo y seguridad social.' },
+      { n: 'Familia', d: 'Divorcios, filiación, asistencia familiar, guarda y régimen de visitas, medidas de protección.' },
+      { n: 'Comercial / Mercantil', d: 'Constitución de sociedades, gobierno corporativo, contratos comerciales, títulos valores.' },
+      { n: 'Administrativo', d: 'Procedimientos y recursos administrativos, licitaciones, sanciones y regulaciones sectoriales.' },
+      { n: 'Constitucional', d: 'Acciones de defensa: amparo, libertad, inconstitucionalidad, cumplimiento, hábeas data.' },
+      { n: 'Tributario', d: 'Determinación, impugnaciones, gestión de fiscalizaciones y defensa contenciosa tributaria.' },
+      { n: 'Agrario', d: 'Regularización de tierras, saneamiento, derechos agrarios y procedimientos ante el INRA.' },
+      { n: 'Minero', d: 'Contratos mineros, derechos y obligaciones, licencias y aspectos regulatorios.' },
+      { n: 'Ambiental', d: 'Licencias, auditorías ambientales, cumplimiento normativo y defensa ante autoridades.' },
+      { n: 'Propiedad Intelectual', d: 'Registro de marcas, patentes y derechos de autor; defensa frente a infracciones.' },
+      { n: 'Arbitraje y Conciliación', d: 'Cláusulas arbitrales, representación en ADR y ejecución de laudos.' },
+      { n: 'Hidrocarburos / Energía', d: 'Contratos, regulación y cumplimiento en el sector energético e hidrocarburífero.' },
+      { n: 'Telecomunicaciones', d: 'Habilitaciones, régimen sancionador y relaciones con la autoridad reguladora.' },
+      { n: 'Notarial / Inmobiliario', d: 'Contratos de transferencia, saneamiento de propiedad, regularización y trámites notariales.' },
+      { n: 'Protección de datos', d: 'Políticas de privacidad, avisos y buenas prácticas de tratamiento responsable.' },
+      { n: 'Derechos del consumidor', d: 'Reclamos, prácticas abusivas, garantías y procedimientos de defensa del consumidor.' }
+    ];
+
+    const grid = document.getElementById('services-grid');
+    AREAS.forEach(a => {
+      const el = document.createElement('div');
+      el.className = 'service';
+      el.innerHTML = `<h4>${a.n}</h4><p>${a.d}</p>`;
+      el.addEventListener('click', () => openModal(a.n, a.d));
+      grid.appendChild(el);
+    });
+
+    // Modal
+    const bd = document.getElementById('modal-bd');
+    function openModal(title, desc) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-desc').textContent = desc + ' Para una evaluación de su caso, haga clic en "Contactar un abogado".';
+      bd.style.display = 'flex';
+      bd.setAttribute('aria-hidden', 'false');
+    }
+    function closeModal() {
+      bd.style.display = 'none';
+      bd.setAttribute('aria-hidden', 'true');
+    }
+    bd.addEventListener('click', (e) => { if (e.target === bd) closeModal(); });
+
+    // Suavizar scroll para anclas
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const id = this.getAttribute('href').slice(1);
+        if (id) {
+          const el = document.getElementById(id);
+          if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start'}); }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+   
